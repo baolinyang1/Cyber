@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copy all files into the container
 COPY . .
+RUN apt-get update && apt-get install -y file
 
 # Run the script as default command
 ENTRYPOINT ["python", "try.py"]
