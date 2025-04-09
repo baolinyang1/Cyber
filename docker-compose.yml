@@ -1,0 +1,10 @@
+
+
+services:
+  analyzer:
+    build: . # tells Docker Compose to build the image using the Dockerfile in the current directory (.)
+    container_name: cyber_analyzer
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: ["python", "try.py"]
