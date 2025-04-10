@@ -9,4 +9,4 @@ COPY . .
 RUN apt-get update && apt-get install -y file
 
 # Run the script as default command
-ENTRYPOINT ["python", "try.py"]
+ENTRYPOINT ["python", "check.py"]

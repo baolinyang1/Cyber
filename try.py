@@ -129,33 +129,31 @@ def compute_hashes(file_path):
         "shake_256": hashlib.shake_256(),
     }
 
-    #read the file as raw binary bytes, coz hash algorithm only works on binary not text
-    #with ... as can ensure open properly the file and auto close it
-    #store the read() results into content variable
-    #f = open(file_path, "rb")
+    
+    # Use a separate CRC32 accumulator
+    crc32_acc = 0
+
     with open(file_path, "rb") as f:
-        content = f.read()
-    #store the result in dictionary 
-    result = {} 
-    #loop through each key and value in the dictionary, item() method!
+        # while True:
+        # chunk = f.read(8192)
+        # if not chunk:
+        #     break
+        while chunk := f.read(8192):  # read in 8KB chunks
+            for hasher in hash_algs.values():
+                hasher.update(chunk)
+            crc32_acc = zlib.crc32(chunk, crc32_acc)
+
+    result = {}
+
     for name, hasher in hash_algs.items():
-        #haveto specify the length of this one
         if name.startswith("shake"):
-            #hasher is the value field in that dict
-            #It feeds binary data into a hash object, allowing it to calculate the hash based on that data.
-            hasher.update(content)
-            #upper case name to distinction
-            #hexdigest() returns a hex string 
-            # this is the way to put stuff into dict
             result[name.upper()] = hasher.hexdigest(32)
         else:
-            hasher.update(content)
             result[name] = hasher.hexdigest()
-    #calculates the CRC32 checksum of the binary content, & after to make sure Treated as an unsigned 32-bit integer, 
-    # Converts the integer to an 8-digit hexadecimal string
-    result["crc32"] = format(zlib.crc32(content) & 0xFFFFFFFF, '08x')
-    return result
 
+    result["crc32"] = format(crc32_acc & 0xFFFFFFFF, "08x")
+
+    return result
 #normaly the first 8 bytes
 def get_file_magic(file_path):
     try:
