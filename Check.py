@@ -8,6 +8,9 @@ from datetime import datetime
 from os import MFD_ALLOW_SEALING
 from pathlib import Path
 import subprocess
+import io
+
+
 # #################################################################3
 
 input_file = "xxxxxxxxxxxxxxx"
@@ -39,36 +42,37 @@ def CheckSysHash(tools):
     for hash in tools:
         try:
             process = subprocess.run(["which", hash], capture_output=True, text=True)
-
             if process.returncode == 0:
                 print(f"{hash} found")
                 res = "found"
             else:
                 print(f"{hash} not found")
                 res = "not_found"
-
+            processing = None
         except Exception as e:
             print(f"{hash} failed to find")
 
         Found_tools[hash] = res
-
+    hash = None
 CheckSysHash(Tools)
 print(Found_tools)
 
-
-
-
 # CHECK IF PYTHON LIBRARY CAN HASH
-Hashes2 = ["sha3_224","sha3_256","sha3_384","sha3_512","blake2s","blake2b","shake_128","shake_256"]
+available_hashes_dict = {}
+Hashes2 = ["md5","sha1","sha224","sha256","sha384","sha512","sha3_224","sha3_256","sha3_384","sha3_512","blake2s","blake2b","shake_128","shake_256"]
 available_hashes = []
 for hash_name in Hashes2:
     try:
         hash_object = hashlib.new(hash_name)
         available_hashes.append(hash_name)
+        available_hashes_dict[hash_name] = hash_object
+        hash_object = None
     except Exception as e:
         pass
 
+hash_name = None
 print("Available python hashing algorithms:", available_hashes)
+print("Available python hashing algorithm dict:", available_hashes_dict)
 
 
 hash_types = [
@@ -87,48 +91,39 @@ hash_commands = {
 }
 
 result_hashes = {}
+print(available_hashes_dict.keys())
+if len(available_hashes_dict) > 1 :
+    print("Available hashes dict has more than one python hash algorithm")
+    for algo in hash_types:
+        print(algo)
+        # 1.use Python hashlib if supported
+        if algo in list(available_hashes_dict.keys()):
+            try:
+                h = available_hashes_dict[algo]
+                with io.open(p, "rb") as f:
+                    while chunk := f.read(4096):
+                        h.update(chunk)
+                result_hashes[algo] = h.hexdigest(32) if algo.startswith("shake") else h.hexdigest()
 
-for algo in hash_types:
-    # 1. If system tool is available, use it
-    cmd_name = hash_commands.get(algo)
-    if cmd_name and Found_tools.get(cmd_name) == "found":
-        try:
-            output = subprocess.check_output([cmd_name, str(p)], text=True)
-            result_hashes[algo] = output.split()[0]
-            continue
-        except Exception as e:
-            result_hashes[algo] = f"error(system): {str(e)}"
-            continue
+            except Exception as e:
+                print(f"Error: {e}")
 
-    # 2. Else use Python hashlib if supported
-    if algo in available_hashes or algo in hashlib.algorithms_guaranteed:
-        try:
-            h = hashlib.new(algo)
-            with open(p, "rb") as f:
-                while chunk := f.read(8192):
-                    h.update(chunk)
-            result_hashes[algo] = h.hexdigest(32) if algo.startswith("shake") else h.hexdigest()
-            continue
-        except Exception as e:
-            result_hashes[algo] = f"error(python): {str(e)}"
-            continue
+    #system tools handle the left
+    for rest in hash_types:
+        cmd_name = hash_commands.get(rest)
+        if cmd_name and Found_tools.get(cmd_name) == "found":
+            try:
+                output = subprocess.check_output([cmd_name, str(p)], text=True)
+                result_hashes[rest] = output.split()[0]
+            except Exception as e:
+                result_hashes[rest] = ""
+                continue
+        else:
+            result_hashes[rest] = ""
 
-    # 3. Otherwise, leave it empty
-    result_hashes[algo] = ""
-
-# === FINAL PRINT ===
 print("\n# FINAL RESULT")
 print(json.dumps(result_hashes, indent=4))
 
-# for hash type:
-#     if system has hash command:
-#         run command
-#         get hash
-#     else
-#         if python hash hash function:
-#             use python function
-#         else:
-#             leave field empty
 
 
 

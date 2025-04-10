@@ -109,10 +109,13 @@ import zlib
 from datetime import datetime
 from pathlib import Path
 import subprocess
+import io
+
 
 def compute_hashes(file_path):
     hash_algs = {
         #these are from the hash library
+        #the value field are the hash objects
         "md5": hashlib.md5(),
         "sha1": hashlib.sha1(),
         "sha224": hashlib.sha224(),
@@ -133,7 +136,7 @@ def compute_hashes(file_path):
     # Use a separate CRC32 accumulator
     crc32_acc = 0
 
-    with open(file_path, "rb") as f:
+    with io.open(file_path, "rb") as f:
         # while True:
         # chunk = f.read(8192)
         # if not chunk:
