@@ -8,6 +8,7 @@ from datetime import datetime
 from os import MFD_ALLOW_SEALING
 from pathlib import Path
 import subprocess
+import ppdeep
 import io
 
 
@@ -37,7 +38,7 @@ else:
 
 Found_tools = dict()
 # CHECK IF SYSTEM HAS
-Tools = ['md5sum',"sha1sum","sha224sum","sha256sum","sha384sum","sha512sum","rhash","openssl","realpath","readlink","stat","file","ssdeep","exiftool"]
+Tools = ['md5sum',"sha1sum","sha224sum","sha256sum","sha384sum","sha512sum","rhash","openssl","ssdeep","exiftool"]
 def CheckSysHash(tools):
     for hash in tools:
         try:
@@ -78,7 +79,7 @@ print("Available python hashing algorithm dict:", available_hashes_dict)
 hash_types = [
     "md5", "sha1", "sha224", "sha256", "sha384", "sha512",
     "sha3_224", "sha3_256", "sha3_384", "sha3_512",
-    "blake2s", "blake2b", "shake_128", "shake_256"
+    "blake2s", "blake2b", "shake_128", "shake_256","ssdeep",
 ]
 
 hash_commands = {
@@ -88,6 +89,7 @@ hash_commands = {
     "sha256": "sha256sum",
     "sha384": "sha384sum",
     "sha512": "sha512sum",
+    "ssdeep": "ssdeep"
 }
 
 result_hashes = {}
