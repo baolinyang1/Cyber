@@ -10,6 +10,7 @@ from pathlib import Path
 import subprocess
 import ppdeep
 import io
+import fuzzyhashlib
 
 
 # #################################################################3
@@ -79,7 +80,7 @@ print("Available python hashing algorithm dict:", available_hashes_dict)
 hash_types = [
     "md5", "sha1", "sha224", "sha256", "sha384", "sha512",
     "sha3_224", "sha3_256", "sha3_384", "sha3_512",
-    "blake2s", "blake2b", "shake_128", "shake_256","ssdeep",
+    "blake2s", "blake2b", "shake_128", "shake_256",
 ]
 
 hash_commands = {
@@ -89,10 +90,21 @@ hash_commands = {
     "sha256": "sha256sum",
     "sha384": "sha384sum",
     "sha512": "sha512sum",
-    "ssdeep": "ssdeep"
 }
 
+
 result_hashes = {}
+
+with io.open(p, "rb") as f:
+        while chunk := f.read(4096):
+            result_hashes["sdhash"] = fuzzyhashlib.sdhash(chunk)
+
+fileszie = os.path.getsize(p)
+if fileszie >= 4096:
+    #just a note here, because the file is so small, othewise the ppdeep can read the file bu chunks
+    with io.open(p, "rb") as f:
+        while chunk := f.read(4096):
+            result_hashes["ssdeep"] = ppdeep.hash(chunk)
 if len(available_hashes_dict) > 1 :
     print("Available hashes dict has more than one python hash algorithm")
     for algo in hash_types:
@@ -104,10 +116,10 @@ if len(available_hashes_dict) > 1 :
                     while chunk := f.read(4096):
                         h.update(chunk)
                 result_hashes[algo] = h.hexdigest(32) if algo.startswith("shake") else h.hexdigest()
-
+                
             except Exception as e:
                 print(f"Error: {e}")
-
+ 
     #system tools handle the left
     for rest in hash_types:
         if rest in result_hashes:
