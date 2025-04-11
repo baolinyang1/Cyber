@@ -16,14 +16,14 @@ import io
 input_file = "xxxxxxxxxxxxxxx"
 
 # CHECK IF PATH EXISTS
-if os.path.exists("/home/user01/Desktop/Hash/file.txt"):
+if os.path.exists("file.txt"):
     print("File exists")
     pass
 else:
     print("File doesn't exist")
 
 # CHECK IF FILE EXISTS
-p = Path("/home/user01/Desktop/Hash/file.txt")
+p = Path("file.txt")
 
 # CHECK IF FILE IS A FILE AND NOT A SPECIAL FILE
 if p.exists():
@@ -48,7 +48,7 @@ def CheckSysHash(tools):
             else:
                 print(f"{hash} not found")
                 res = "not_found"
-            processing = None
+            process = None
         except Exception as e:
             print(f"{hash} failed to find")
 
@@ -91,11 +91,9 @@ hash_commands = {
 }
 
 result_hashes = {}
-print(available_hashes_dict.keys())
 if len(available_hashes_dict) > 1 :
     print("Available hashes dict has more than one python hash algorithm")
     for algo in hash_types:
-        print(algo)
         # 1.use Python hashlib if supported
         if algo in list(available_hashes_dict.keys()):
             try:
@@ -110,6 +108,8 @@ if len(available_hashes_dict) > 1 :
 
     #system tools handle the left
     for rest in hash_types:
+        if rest in result_hashes:
+            continue  # Skip already processed hashes
         cmd_name = hash_commands.get(rest)
         if cmd_name and Found_tools.get(cmd_name) == "found":
             try:
@@ -120,6 +120,34 @@ if len(available_hashes_dict) > 1 :
                 continue
         else:
             result_hashes[rest] = ""
+else:
+    print("Python hash support is limited — using system tools first")
+
+    # 1. Try system tools first
+    for algo in hash_types:
+        cmd_name = hash_commands.get(algo)
+        if cmd_name and Found_tools.get(cmd_name) == "found":
+            try:
+                output = subprocess.check_output([cmd_name, str(p)], text=True)
+                result_hashes[algo] = output.split()[0]
+            except Exception as e:
+                result_hashes[algo] = ""
+
+    # 2. Try Python for remaining ones
+    for algo in hash_types:
+        if algo in result_hashes:
+            continue  # Already handled
+        if algo in available_hashes_dict:
+            try:
+                h = available_hashes_dict[algo]
+                with io.open(p, "rb") as f:
+                    while chunk := f.read(4096):
+                        h.update(chunk)
+                result_hashes[algo] = h.hexdigest(32) if algo.startswith("shake") else h.hexdigest()
+            except Exception as e:
+                result_hashes[algo] = ""
+        else:
+            result_hashes[algo] = ""
 
 print("\n# FINAL RESULT")
 print(json.dumps(result_hashes, indent=4))
