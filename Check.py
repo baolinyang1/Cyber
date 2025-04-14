@@ -5,7 +5,6 @@ import mimetypes
 import sys
 import zlib
 from datetime import datetime
-from os import MFD_ALLOW_SEALING
 from pathlib import Path
 import subprocess
 import io
