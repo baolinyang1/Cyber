@@ -26,3 +26,34 @@ find '/home/user01/Downloads/go-fuzz-corpus-master' -type f -print0 | xargs -0 .
     Redirects stderr (2) to stdout (1).
 
     This ensures all output (errors + results) go to the same place — useful if you're logging or want to capture everything together.
+
+
+
+./trid '/home/user01/Downloads/wizHeaderRTL.bmp' 
+
+TrID/32 - File Identifier v2.24 - (C) 2003-16 By M.Pontello
+Definitions found:  19235
+Analyzing...
+
+Collecting data from file: /home/user01/Downloads/wizHeaderRTL.bmp
+ 50.0% (.BMP/RLE/DIB) Windows Bitmap (generic) (2004/3)
+ 50.0% (.BMP) Windows Bitmap (v3) (2004/2)
+
+want
+ 50.0% (.BMP/RLE/DIB) Windows Bitmap (generic) (2004/3)
+ 50.0% (.BMP) Windows Bitmap (v3) (2004/2)
+
+====================================
+./trid /home/user01/Downloads/go-fuzz-corpus-master/asm/corpus/addb5885853bb1386a3da731a58eabe83b5effb5-26
+
+TrID/32 - File Identifier v2.24 - (C) 2003-16 By M.Pontello
+Definitions found:  19235
+Analyzing...
+
+Collecting data from file: /home/user01/Downloads/go-fuzz-corpus-master/asm/corpus/addb5885853bb1386a3da731a58eabe83b5effb5-26
+       Unknown!
+
+want
+       Unknown!
+
+write a python scipt for this 
