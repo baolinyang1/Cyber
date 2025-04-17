@@ -1,0 +1,28 @@
+1. Trid is working
+
+Get used to the wget method and unzip them
+
+find '/home/user01/Downloads/go-fuzz-corpus-master' -type f -print0 | xargs -0 ./trid 2>&1 > '/home/user01/Downloads/trid_log.txt' 
+-type -f means only check the regular file (not the folder, symlink)
+ 1. find '/home/user01/Downloads/go-fuzz-corpus-master' -type f -print0
+
+    find: Search for files or directories.
+
+    '...': The path you're scanning — the go-fuzz-corpus-master folder.
+
+    -type f: Only include regular files (not folders, symlinks, etc.).
+
+    -print0: Print each file separated by a null character (\0) instead of newlines. This safely handles filenames with spaces, newlines, or special characters.
+
+✅ 2. xargs -0 ./trid
+
+    xargs: Takes input (from find) and passes it as arguments to another command — in this case, ./trid.
+
+    -0: Tells xargs to expect null-separated items (works with -print0).
+
+    ./trid: The file identification tool you’re using. It'll run once per file found
+2>&1
+
+    Redirects stderr (2) to stdout (1).
+
+    This ensures all output (errors + results) go to the same place — useful if you're logging or want to capture everything together.
