@@ -9,7 +9,10 @@ from pathlib import Path
 import subprocess
 import ppdeep
 import io
-import fuzzyhashlib
+import sdhash
+print("sdhash------------------------------------")
+print(dir(sdhash))
+#import fuzzyhashlib
 
 
 # #################################################################3
@@ -38,7 +41,7 @@ else:
 
 Found_tools = dict()
 # CHECK IF SYSTEM HAS
-Tools = ['md5sum',"sha1sum","sha224sum","sha256sum","sha384sum","sha512sum","rhash","openssl","ssdeep","exiftool"]
+Tools = ['md5sum',"sha1sum","sha224sum","sha256sum","sha384sum","sha512sum","rhash","openssl","ssdeep","exiftool", "sdhash"]
 def CheckSysHash(tools):
     for hash in tools:
         try:
@@ -93,10 +96,10 @@ hash_commands = {
 
 
 result_hashes = {}
-
+print(dir(sdhash.hashlib))
 with io.open(p, "rb") as f:
         while chunk := f.read(4096):
-            result_hashes["sdhash"] = fuzzyhashlib.sdhash(chunk)
+            result_hashes["sdhash"] = sdhash.hashlib.(chunk)
 
 fileszie = os.path.getsize(p)
 if fileszie >= 4096:
