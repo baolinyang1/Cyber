@@ -14,7 +14,7 @@ find '/home/user01/Downloads/go-fuzz-corpus-master' -type f -print0 | xargs -0 .
 
     -print0: Print each file separated by a null character (\0) instead of newlines. This safely handles filenames with spaces, newlines, or special characters.
 
-✅ 2. xargs -0 ./trid
+2. xargs -0 ./trid
 
     xargs: Takes input (from find) and passes it as arguments to another command — in this case, ./trid.
 
@@ -27,6 +27,12 @@ find '/home/user01/Downloads/go-fuzz-corpus-master' -type f -print0 | xargs -0 .
 
     This ensures all output (errors + results) go to the same place — useful if you're logging or want to capture everything together.
 
+find '/home/user01/Downloads/go-fuzz-corpus-master' -type f -print0 | xargs -0 -I{} sh -c 'LC_ALL=C ./trid "$0"' {}
+use this one coz the trid has weird issues
+-I{} tells xargs to replace {} with each file.
+sh -c 'LC_ALL=C ./trid "$0"' {} runs each ./trid call in a clean shell with the locale set properly.
+
+use LC_ALL = C if u run one by one
 
 
 ./trid '/home/user01/Downloads/wizHeaderRTL.bmp' 
@@ -57,3 +63,5 @@ want
        Unknown!
 
 write a python scipt for this 
+
+

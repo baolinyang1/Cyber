@@ -1,0 +1,20 @@
+1. in python, encoding is way to convert the string into bytes, which is necessary for storing or transmitting text data. 
+Decoding is the reverse process, converting bytes back into a string
+with open(output_log, 'w', encoding='utf-8') as outlog:
+
+    Opens the output log file for writing.
+
+    utf-8 encoding ensures special characters don't break things.
+
+    with automatically closes the file afterward.
+
+2.
+os.walk() recursively goes through every folder and subfolder in root_dir.
+What os.walk() returns:
+For every directory it visits, os.walk() returns a tuple of:
+(dirpath, dirnames, filenames)
+dirpath: the current folder path.
+dirname is dirname. i dont care(see 3)
+filenames: a list of files in that folder.
+
+3.In Python, _ is a throwaway variable — it means “I don’t care about this value.”
