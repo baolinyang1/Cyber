@@ -385,14 +385,11 @@ Results["Magika-prediction-description"] = res.prediction.output.description
 Results["Magika-prediction-extensions"] = res.prediction.output.extensions
 Results["Magika-prediction-isText"] = res.prediction.output.is_text
 
-# Optional: Include prediction confidence and overwrite reason
+# prediction confidence and overwrite reason
 Results["Magika-score"] = res.prediction.score
 Results["Magika-overwrite_reason"] = res.prediction.overwrite_reason.value
 
-
-print(res)
 if len(available_hashes_dict) > 1 :
-    #print("Available hashes dict has more than one python hash algorithm")
     for algo in hash_types:
         # 1.use Python hashlib if supported
         if algo in list(available_hashes_dict.keys()):
@@ -421,7 +418,7 @@ if len(available_hashes_dict) > 1 :
         else:
             Results[rest] = ""
 else:
-    print("Python hash support is limited — using system tools first")
+    print("Python hash support is limited(just 0 or 1 tool avai) — using system tools first")
 
     # 1. Try system tools first
     for algo in hash_types:
@@ -526,3 +523,5 @@ except Exception as e:
 
 print("\n# FINAL RESULT WITH METADATA + HASHES + TRID")
 print(json.dumps(Results, indent=4))
+
+Results = None
