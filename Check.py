@@ -9,15 +9,6 @@ from pathlib import Path
 import subprocess
 import ppdeep
 import io
-import sdhash
-print("sdhash------------------------------------")
-print(dir(sdhash))
-#import fuzzyhashlib
-
-
-# #################################################################3
-
-input_file = "xxxxxxxxxxxxxxx"
 
 # CHECK IF PATH EXISTS
 if os.path.exists("file.txt"):
@@ -96,14 +87,10 @@ hash_commands = {
 
 
 result_hashes = {}
-print(dir(sdhash.hashlib))
-with io.open(p, "rb") as f:
-        while chunk := f.read(4096):
-            result_hashes["sdhash"] = sdhash.hashlib.(chunk)
 
 fileszie = os.path.getsize(p)
 if fileszie >= 4096:
-    #just a note here, because the file is so small, othewise the ppdeep can read the file bu chunks
+    #just a note here, because the file is so small, othewise the ppdeep can read the file by chunks
     with io.open(p, "rb") as f:
         while chunk := f.read(4096):
             result_hashes["ssdeep"] = ppdeep.hash(chunk)
@@ -167,48 +154,3 @@ else:
 
 print("\n# FINAL RESULT")
 print(json.dumps(result_hashes, indent=4))
-
-
-
-
-#hashlib_calls = list(dir(hashlib))
-"""
-[
- 'blake2b', 
- 'blake2s', 
- 'md5', 
- 'pbkdf2_hmac', 
- 'scrypt', 
- 'sha1', 
- 'sha224', 
- 'sha256', 
- 'sha384', 
- 'sha3_224', 
- 'sha3_256', 
- 'sha3_384', 
- 'sha3_512', 
- 'sha512', 
- 'shake_128', 
- 'shake_256'
- ]
-"""
-#print(hashlib_calls)
-# if "md5" in hashlib_calls:
-#     "md5": hashlib.md5(),
-#     "sha1": hashlib.sha1(),
-#     "sha224": hashlib.sha224(),
-#     "sha256": hashlib.sha256(),
-#     "sha384": hashlib.sha384(),
-#     "sha512": hashlib.sha512(),
-#     "sha3_224": hashlib.sha3_224(),
-#     "sha3_256": hashlib.sha3_256(),
-#     "sha3_384": hashlib.sha3_384(),
-#     "sha3_512": hashlib.sha3_512(),
-#     "blake2s": hashlib.blake2s(),
-#     "blake2b": hashlib.blake2s(),
-#     "shake_128": hashlib.shake_128(),
-#     "shake_256": hashlib.shake_256(),
-
-
-
-# sys.exit()

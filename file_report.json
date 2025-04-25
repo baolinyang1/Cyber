@@ -1,10 +1,10 @@
 {
-    "file_path": "/app/file.txt",
-    "path": "/app/file.txt",
+    "file_path": "/home/user01/Desktop/Cyber/file.txt",
+    "path": "/home/user01/Desktop/Cyber/file.txt",
     "file_name": "file",
     "file_extension": "txt",
     "Size": 14,
-    "Modify_date": "2025-04-09T04:24:14.683524",
+    "Modify_date": "2025-04-09T13:08:08.782804",
     "file_magic": "ASCII text, with no line terminators",
     "file_mime_type": "text/plain",
     "file_mime_encoding": "binary",
